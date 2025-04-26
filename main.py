@@ -8,7 +8,7 @@ from datetime import datetime
 import tempfile
 import jinja2
 import supabase
-import sign_pdf from signer.py
+from signer.py import sign_pdf 
 
 
 # Initialize Supabase client
