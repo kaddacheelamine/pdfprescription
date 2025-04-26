@@ -8,6 +8,7 @@ from datetime import datetime
 import tempfile
 import jinja2
 import supabase
+import sign_pdf from signer.py
 
 
 # Initialize Supabase client
@@ -206,13 +207,7 @@ HTML_TEMPLATE = """
         </div>
     </div>
 
-    <main style="flex: 1;">
-        <!-- Main content area -->
-    </main>
     
-    <footer>
-        لا تتركو الدواء في متناول الأطفال
-    </footer>
 </body>
 </html>
 """
@@ -241,13 +236,14 @@ async def generate_prescription(data: PrescriptionData):
         with tempfile.NamedTemporaryFile(suffix='.pdf', delete=False) as temp_file:
             # Generate PDF from HTML
             weasyprint.HTML(string=html_content).write_pdf(temp_file.name)
+            sign_pdf("certificate.pfx", "password", filename , "s"+filename)
             
             # Upload the PDF to Supabase storage
             with open(temp_file.name, 'rb') as pdf_file:
                 # Upload to the 'pdfs' bucket
                 upload_response = supabase_client.storage.from_('pdfs').upload(
                     file=pdf_file,
-                    path=filename,
+                    path="s"+filename,
                     file_options={"content-type": "application/pdf"}
                 )
             
