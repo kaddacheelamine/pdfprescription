@@ -3,5 +3,3 @@ supabase
 fastapi
 uvicorn
 weasyprint
-cryptography
-endesive
